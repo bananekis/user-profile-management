@@ -4,8 +4,9 @@ import Layout from "@/components/Layout";
 import prisma from "@/lib/prisma";
 import EditProfileForm from "@/components/forms/EditProfileForm";
 import { authOptions } from "@/lib/auth";
+import { PageProps } from "@/.next/types/app/profiles/[id]/page";
 
-export default async function Profile({ params }: { params: { id: string } }) {
+export default async function Profile({ params }: PageProps) {
 	const session = await getServerSession(authOptions);
 
 	if (!session) {
@@ -13,7 +14,7 @@ export default async function Profile({ params }: { params: { id: string } }) {
 	}
 
 	const profile = await prisma.profile.findUnique({
-		where: { id: params.id },
+		where: { id: await (params as any).id },
 	});
 
 	if (!profile) {
